@@ -1,0 +1,8 @@
+Simple script to let user vote on which is his favorite Halloween candy from a random pair.  Results are then displayed along with another random pair.
+
+I know it's not particularly well-designed, but it's my first git project.
+
+Future changes:
+-Add AJAX form submits.
+-Add more candies.
+-Generalize to be able to compare any two objects.
