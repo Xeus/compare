@@ -1,10 +1,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 
-<html>
+<!--
 
-<head>
-    <title>What's the Best Halloween Candy?</title>
-    <style type="text/css">
+NOTES:
+
+To add new candies, you'll have to add a new row to the candy_records table, as well as a new column within that table.  Then add the new candy to the Overall table as well.
+
+-->
+
+<HTML>
+
+<HEAD>
+    <TITLE>What's the Best Halloween Candy?</TITLE>
+    <STYLE type="text/css">
         <!-- 
 
         .records TD { text-align: center; }
@@ -13,10 +21,10 @@
         .question { font-weight: bold; font-size: 16pt; }
 
         // -->
-    </style>
-</head>
+    </STYLE>
+</HEAD>
 
-<body>
+<BODY>
 
 <?php
 
@@ -88,18 +96,15 @@ class CandyRecord {
     }
 
 }
-
 // end class CandyRecord
 
 // tests if URL has &match=true and that both candy names have been POSTed
-
 if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['candy2']))) {
 
     $record1 = new CandyRecord;
     $record2 = new CandyRecord;
 
     // escape strings for security
-
     $record1->candy_name = mysql_real_escape_string($_POST['candy1']);
     $record2->candy_name = mysql_real_escape_string($_POST['candy2']);
     
@@ -121,7 +126,6 @@ if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['c
     $record2_exploded = $record2->swap_records($record1_exploded);
 
     // do the candy names exist in the array?
-
     if ((!in_array($record1->candy_name,$candies)) || (!in_array($record2->candy_name,$candies))) {
         echo "Candy not found...  Nice try.";
     }
@@ -166,7 +170,6 @@ if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['c
 }
 
 // randomly pick two candies that are different
-
 $candy_random1 = rand(0,8);
 
 $found = false;
@@ -185,41 +188,42 @@ while ($found == false) {
 <CENTER>
 
 <!-- FACEOFF BEGIN -->
-<SPAN CLASS=question>What's your favorite Halloween candy?</SPAN><BR>
-<table border=0><tr><td valign=middle align=center class=faceoff>
+<SPAN CLASS=question>Which Halloween candy do you prefer?</SPAN><BR>
+<TABLE border=0><TR><TD valign=middle align=center class=faceoff>
 
-<form name=candy_form1 id=candy_form1 method=post action="./">
-<input type=hidden name=candy1 value="<?php echo $candies[$candy_random1]; ?>">
-<input type=hidden name=candy2 value="<?php echo $candies[$candy_random2]; ?>">
-<input type=hidden name=winner value="1">
-<input type=hidden name=match value="true">
-<input type=submit name=button_candy1 id=button_candy1 value="<?php echo $candies[$candy_random1]; ?>"></form>
+<FORM name=candy_form1 id=candy_form1 method=post action="./">
+<INPUT type=hidden name=candy1 value="<?php echo $candies[$candy_random1]; ?>">
+<INPUT type=hidden name=candy2 value="<?php echo $candies[$candy_random2]; ?>">
+<INPUT type=hidden name=winner value="1">
+<INPUT type=hidden name=match value="true">
+<INPUT type=submit name=button_candy1 id=button_candy1 value="<?php echo $candies[$candy_random1]; ?>"></form>
 
-</td>
-<td valign=top align=center>
+</TD>
+<TD valign=top align=center>
 
 vs.
 
-</td>
-<td valign=middle align=center>
+</TD>
+<TD valign=middle align=center>
 
 <form name=candy_form2 id=candy_form2 method=post action="./">
-<input type=hidden name=candy1 value="<?php echo $candies[$candy_random1]; ?>">
-<input type=hidden name=candy2 value="<?php echo $candies[$candy_random2]; ?>">
-<input type=hidden name=winner value="2">
-<input type=hidden name=match value="true">
-<input type=submit name=button_candy2 id=button_candy2 value="<?php echo $candies[$candy_random2]; ?>"></form>
+<INPUT type=hidden name=candy1 value="<?php echo $candies[$candy_random1]; ?>">
+<INPUT type=hidden name=candy2 value="<?php echo $candies[$candy_random2]; ?>">
+<INPUT type=hidden name=winner value="2">
+<INPUT type=hidden name=match value="true">
+<INPUT type=submit name=button_candy2 id=button_candy2 value="<?php echo $candies[$candy_random2]; ?>"></form>
 
-</td>
-</tr></table>
+</TD>
+</tr></TABLE>
 <!-- FACEOFF END -->
+
+<BR><BR><BR>
 
 <?php
 if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['candy2']))) {
 ?>
 
-<BR>
-<b>results from the last vote</b><br>
+<B>results from the last vote</B><br>
 <B>you voted for:  <?php echo $winner; ?></B><BR>
 <?php echo '# of votes:  ' . $record1->candy_name . ' (' . $record1->wins . ') vs. ' . $record2->candy_name . ' (' . $record2->wins . ")\n"; ?>
 
@@ -232,7 +236,7 @@ if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['c
 
 <!-- begin vs record table -->
 <table class="records" border=1 cellspacing=0 cellpadding=7>
-<tr>
+<TR>
 <TH></TH>
 <?php
 
@@ -240,10 +244,6 @@ echo "<TH>" . $record1->candy_name . "</TH><TH>" . $record2->candy_name . "</TH>
 
 $result_headsup1 = mysql_query("SELECT * FROM candy_records WHERE Name='$record1->candy_name' LIMIT 1");
 $result_headsup2 = mysql_query("SELECT * FROM candy_records WHERE Name='$record2->candy_name' LIMIT 1");
-/* $count - mysql_num_rows($result_headsup1);
-for ($i=0;$i<$count;$i++) {
-    echo mysql_result($result_headsup1,$i,"
-} */
 while (($row_headsup1 = mysql_fetch_array($result_headsup1, MYSQL_ASSOC)) && ($row_headsup2 = mysql_fetch_array($result_headsup2, MYSQL_ASSOC))) {
     foreach ($candies as $value) {
         echo "<TR><TH>" . $value . "</TH><TD>" . $row_headsup1[$value] . "</TD><TD>" . $row_headsup2[$value] . "</TD></TR>";
@@ -264,7 +264,7 @@ while (($row_headsup1 = mysql_fetch_array($result_headsup1, MYSQL_ASSOC)) && ($r
 <B>overall records</B><BR>
 
 <table class="records" border=1 cellspacing=0 cellpadding=7> <!-- begin record table -->
-<tr><TH>Overall</TH><TH>Record</TH></TR>
+<TR><TH>Overall</TH><TH>Record</TH></TR>
 
 <?php
 
@@ -272,18 +272,15 @@ $result = mysql_query("SELECT Name, Overall FROM candy_records ORDER BY Name ASC
 
 while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
     echo "<TR><TD>" . $row3['Name'] . "</TD><TD>" . $row3['Overall'] . "</TD></TR>\n";
-/*    $candies_count = count($candies);
-    for ($i=0;$i<$candies_count;$i++) {
-        echo "<TD>" . $row3[$candies[$i]] . "</TD>\n";
-    } */
 }
 
 mysql_close();
 
 ?>
 
-</tr>
-</table> <!-- end record table -->
+</TR>
+</table>
+<!-- end record table -->
 
 </TD>
 </TR></TABLE>
@@ -296,6 +293,6 @@ mysql_close();
     });
 </script>
 
-</body>
+</BODY>
 
-</html>
+</HTML>
