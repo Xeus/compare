@@ -170,7 +170,7 @@ if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['c
 }
 
 // randomly pick two candies that are different
-$candy_random1 = rand(0,8);
+$candy_random1 = rand(0,26);
 
 $found = false;
 while ($found == false) {
