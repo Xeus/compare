@@ -15,10 +15,12 @@ To add new candies, you'll have to add a new row to the candy_records table, as 
     <STYLE type="text/css">
         <!-- 
 
-        .records TD { text-align: center; }
+        BODY { background-color: black; background-image: url('img/darkpumpkin.jpg'); color: #ffa500; background-repeat: repeat-x; }
+        .records TD { text-align: center; font-size: 10pt; }
         INPUT { font-size: 18pt; }
         .candy_header { background: black; color: white; font-weight: bold; }
-        .question { font-weight: bold; font-size: 16pt; }
+        .question { font-weight: bold; font-size: 16pt; color: #9acd32; }
+        .button_candy { background-color: #ffcc00; color: black; }
 
         // -->
     </STYLE>
@@ -196,7 +198,7 @@ while ($found == false) {
 <INPUT type=hidden name=candy2 value="<?php echo $candies[$candy_random2]; ?>">
 <INPUT type=hidden name=winner value="1">
 <INPUT type=hidden name=match value="true">
-<INPUT type=submit name=button_candy1 id=button_candy1 value="<?php echo $candies[$candy_random1]; ?>"></form>
+<INPUT type=submit name=button_candy1 class=button_candy id=button_candy1 value="<?php echo $candies[$candy_random1]; ?>"></form>
 
 </TD>
 <TD valign=top align=center>
@@ -211,7 +213,7 @@ vs.
 <INPUT type=hidden name=candy2 value="<?php echo $candies[$candy_random2]; ?>">
 <INPUT type=hidden name=winner value="2">
 <INPUT type=hidden name=match value="true">
-<INPUT type=submit name=button_candy2 id=button_candy2 value="<?php echo $candies[$candy_random2]; ?>"></form>
+<INPUT type=submit name=button_candy2 class=button_candy id=button_candy2 value="<?php echo $candies[$candy_random2]; ?>"></form>
 
 </TD>
 </tr></TABLE>
