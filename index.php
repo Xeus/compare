@@ -18,8 +18,10 @@ To add new candies, you'll have to add a new row to the candy_records table, as 
         BODY { background-color: black; background-image: url('img/darkpumpkin.jpg'); color: #ffa500; background-repeat: repeat-x; font-family: Helvetica, Georgia; }
         .records TH, .records TD { text-align: center; font-size: 8pt; }
         INPUT { font-size: 18pt; }
+        A { color: #ffefc9;}
         .candy_header { background: black; color: white; font-weight: bold; }
         .heading { font-weight: bold; font-size: 16pt; color: #9acd32; }
+        .heading2 { font-weight: bold; font-size: 22pt; color: #9acd32; }
         .button_candy { background-color: #ffcc00; color: black; }
         TABLE { border-color: #ffa500; }
         .datatables { padding: 15px;}
@@ -192,7 +194,7 @@ while ($found == false) {
 <CENTER>
 
 <!-- FACEOFF BEGIN -->
-<SPAN CLASS=heading>Which Halloween candy do you prefer?</SPAN><BR>
+<SPAN CLASS=heading2>Which Halloween candy do you prefer?</SPAN><BR>
 <TABLE border=0><TR><TD valign=middle align=center class=faceoff>
 
 <FORM name=candy_form1 id=candy_form1 method=post action="./">
@@ -231,7 +233,7 @@ if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['c
 <B>you voted for:  <?php echo $winner; ?></B><BR>
 <?php echo '# of votes:  ' . $record1->candy_name . ' (' . $record1->wins . ') vs. ' . $record2->candy_name . ' (' . $record2->wins . ")\n"; ?>
 
-<BR><BR><BR><BR>
+<BR><BR>
 
 <TABLE BORDER=0 CELLSPACING=10><TR>
 <TD VALIGN=top CLASS=datatables>
@@ -241,7 +243,7 @@ if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['c
 <SPAN CLASS="heading"><B>heads-up records</B></SPAN><BR>
 
 <!-- begin vs record table -->
-<table class="records" border=1 cellspacing=0 cellpadding=7>
+<table class="records" border=1 cellspacing=0 cellpadding=7 TITLE="view this as two candy columns with their heads-up records against all the other candies on the left">
 <TR>
 <TH></TH>
 <?php
@@ -294,7 +296,7 @@ while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
 <SPAN CLASS="heading"><B>top candies</B></SPAN><BR>
 
 <table class="records" border=1 cellspacing=0 cellpadding=7> <!-- begin record table -->
-<TR><TH>Best</TH><TH>Record</TH><TH>Win %</TH></TR>
+<TR><TH>Best</TH><TH>Record</TH><TH TITLE="wins divided by losses">Win %</TH></TR>
 
 <?php
 
@@ -345,6 +347,13 @@ mysql_close();
 
 </TD>
 </TR></TABLE>
+
+<BR><BR>
+
+<center><font size=1>
+created by <a href="http://benturner.com/">ben turner</A> for fun. <a href="http://benturner.com/contact_me.php">contact me</a> with feedback.<br>
+<a href="https://github.com/Xeus/compare">check out the code</a> on github.
+</font></center>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 
