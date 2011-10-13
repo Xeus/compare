@@ -16,11 +16,13 @@ To add new candies, you'll have to add a new row to the candy_records table, as 
         <!-- 
 
         BODY { background-color: black; background-image: url('img/darkpumpkin.jpg'); color: #ffa500; background-repeat: repeat-x; font-family: Helvetica, Georgia; }
-        .records TD { text-align: center; font-size: 10pt; }
+        .records TH, .records TD { text-align: center; font-size: 8pt; }
         INPUT { font-size: 18pt; }
         .candy_header { background: black; color: white; font-weight: bold; }
-        .question { font-weight: bold; font-size: 16pt; color: #9acd32; }
+        .heading { font-weight: bold; font-size: 16pt; color: #9acd32; }
         .button_candy { background-color: #ffcc00; color: black; }
+        TABLE { border-color: #ffa500; }
+        .datatables { padding: 15px;}
 
         // -->
     </STYLE>
@@ -186,11 +188,11 @@ while ($found == false) {
 
 <!-- Yeah I know, I'm using tables... -->
 
-<BR><BR><BR><BR><BR>
+<BR><BR><BR>
 <CENTER>
 
 <!-- FACEOFF BEGIN -->
-<SPAN CLASS=question>Which Halloween candy do you prefer?</SPAN><BR>
+<SPAN CLASS=heading>Which Halloween candy do you prefer?</SPAN><BR>
 <TABLE border=0><TR><TD valign=middle align=center class=faceoff>
 
 <FORM name=candy_form1 id=candy_form1 method=post action="./">
@@ -201,7 +203,7 @@ while ($found == false) {
 <INPUT type=submit name=button_candy1 class=button_candy id=button_candy1 value="<?php echo $candies[$candy_random1]; ?>"></form>
 
 </TD>
-<TD valign=top align=center>
+<TD valign=middle align=center>
 
 vs.
 
@@ -219,22 +221,24 @@ vs.
 </tr></TABLE>
 <!-- FACEOFF END -->
 
-<BR><BR><BR>
+<BR><BR>
 
 <?php
 if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['candy2']))) {
 ?>
 
-<B>results from the last vote</B><br>
+<SPAN CLASS="heading"><B>results from the last vote</B></SPAN><br>
 <B>you voted for:  <?php echo $winner; ?></B><BR>
 <?php echo '# of votes:  ' . $record1->candy_name . ' (' . $record1->wins . ') vs. ' . $record2->candy_name . ' (' . $record2->wins . ")\n"; ?>
 
 <BR><BR><BR><BR>
 
 <TABLE BORDER=0 CELLSPACING=10><TR>
-<TD VALIGN=top>
+<TD VALIGN=top CLASS=datatables>
 
-<B>heads-up records</B><BR>
+<!-- shows last two candies' heads-up records -->
+
+<SPAN CLASS="heading"><B>heads-up records</B></SPAN><BR>
 
 <!-- begin vs record table -->
 <table class="records" border=1 cellspacing=0 cellpadding=7>
@@ -261,9 +265,11 @@ while (($row_headsup1 = mysql_fetch_array($result_headsup1, MYSQL_ASSOC)) && ($r
 }
 ?>
 
-</TD><TD VALIGN=top>
+</TD><TD VALIGN=top CLASS=datatables>
 
-<B>overall records</B><BR>
+<!-- prints out overall record chart, alphabetically -->
+
+<SPAN CLASS="heading"><B>overall records</B></SPAN><BR>
 
 <table class="records" border=1 cellspacing=0 cellpadding=7> <!-- begin record table -->
 <TR><TH>Overall</TH><TH>Record</TH></TR>
@@ -276,11 +282,64 @@ while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
     echo "<TR><TD>" . $row3['Name'] . "</TD><TD>" . $row3['Overall'] . "</TD></TR>\n";
 }
 
+?>
+
+</table>
+<!-- end record table -->
+
+</TD><TD VALIGN=top CLASS=datatables>
+
+<!-- check win/loss percentages, sort, display -->
+
+<SPAN CLASS="heading"><B>top candies</B></SPAN><BR>
+
+<table class="records" border=1 cellspacing=0 cellpadding=7> <!-- begin record table -->
+<TR><TH>Best</TH><TH>Record</TH><TH>Win %</TH></TR>
+
+<?php
+
+$result = mysql_query("SELECT Name, Overall FROM candy_records ORDER BY Name ASC");
+
+$i = 0;
+
+while ($i < mysql_num_rows($result)) {
+    $bestRecords[$i] = explode("-", mysql_result($result,$i,"Overall"));
+    $bestRecords[$i][2] = mysql_result($result,$i,"Name");
+    $bestRecords[$i][3] = mysql_result($result,$i,"Overall");
+    $i++;
+}
+
+$i = 0;
+$j = 0;
+
+while ($i < count($bestRecords)) {
+    $bestRecords[$i][4] = $bestRecords[$i][0] / $bestRecords[$i][1];
+    $i++;
+}
+
+usort($bestRecords, "custom_sort");
+function custom_sort($a, $b) {
+    return $a['4']<$b['4'];
+}
+
+$i = 0;
+while ($i < count($bestRecords)) {
+    echo "<TR><TD>" . $bestRecords[$i][2] . "</TD><TD>" . $bestRecords[$i][3] . "</TD><TD>" . round($bestRecords[$i][4],2) . "</TD></TR>\n";
+    $i++;
+}
+
+/*
+
+while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
+    echo "<TR><TD>" . $row3['Name'] . "</TD><TD>" . $row3['Overall'] . "</TD></TR>\n";
+}
+
+*/
+
 mysql_close();
 
 ?>
 
-</TR>
 </table>
 <!-- end record table -->
 
