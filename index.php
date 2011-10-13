@@ -15,7 +15,7 @@ To add new candies, you'll have to add a new row to the candy_records table, as 
     <STYLE type="text/css">
         <!-- 
 
-        BODY { background-color: black; background-image: url('img/darkpumpkin.jpg'); color: #ffa500; background-repeat: repeat-x; }
+        BODY { background-color: black; background-image: url('img/darkpumpkin.jpg'); color: #ffa500; background-repeat: repeat-x; font-family: Helvetica, Georgia; }
         .records TD { text-align: center; font-size: 10pt; }
         INPUT { font-size: 18pt; }
         .candy_header { background: black; color: white; font-weight: bold; }
@@ -172,11 +172,11 @@ if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['c
 }
 
 // randomly pick two candies that are different
-$candy_random1 = rand(0,26);
+$candy_random1 = rand(1,27);
 
 $found = false;
 while ($found == false) {
-    $candy_random2 = rand(0,8);
+    $candy_random2 = rand(1,27);
     if ($candy_random2 != $candy_random1) {
         $found = true;
     }

@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.10.2
+-- version 3.4.5
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 30, 2011 at 08:35 PM
+-- Generation Time: Oct 13, 2011 at 05:04 PM
 -- Server version: 5.0.92
 -- PHP Version: 5.2.17
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -40,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `candy_records` (
   `Circus Peanuts` text NOT NULL,
   `M&Ms` text NOT NULL,
   `Milky Way` text NOT NULL,
-  `Reese's` text NOT NULL,
+  `Reeses` text NOT NULL,
   `Snickers` text NOT NULL,
   `Three Musketeers` text NOT NULL,
   `Pop Rocks` text NOT NULL,
@@ -59,36 +60,30 @@ CREATE TABLE IF NOT EXISTS `candy_records` (
   `Sour Patch Kids` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `candy_records`
+-- Table structure for table `Overall`
 --
 
-INSERT INTO `candy_records` (`id`, `Name`, `Overall`, `Abba-Zaba`, `Almond Joy`, `Atomic Fire Balls`, `Baby Ruth`, `Blow Pop`, `Butterfinger`, `Candy Corn`, `Caramels`, `Circus Peanuts`, `M&Ms`, `Milky Way`, `Reese's`, `Snickers`, `Three Musketeers`, `Pop Rocks`, `Nerds`, `Twizzlers`, `Twix`, `Hershey Kisses`, `Rolo`, `Gummi Bears`, `Sour Worms`, `Jolly Rancher`, `Life Savers`, `Gobstoppers`, `Sugar Daddy`, `Warheads`, `Sour Patch Kids`) VALUES
-(1, 'Abba-Zaba', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(2, 'Almond Joy', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(3, 'Atomic Fire Balls', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(4, 'Baby Ruth', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(5, 'Blow Pop', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(6, 'Butterfinger', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(7, 'Candy Corn', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(8, 'Caramels', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(9, 'Circus Peanuts', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(10, 'M&Ms', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(11, 'Milky Way', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(12, 'Reese''s', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(13, 'Snickers', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(14, 'Three Musketeers', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(28, 'Pop Rocks', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(15, 'Nerds', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(16, 'Twizzlers', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(17, 'Twix', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(18, 'Hershey Kisses', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(19, 'Rolo', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(20, 'Gummi Bears', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(21, 'Sour Worms', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(22, 'Jolly Rancher', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(23, 'Life Savers', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(24, 'Gobstoppers', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(25, 'Sugar Daddy', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(26, 'Warheads', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(27, 'Sour Patch Kids', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+CREATE TABLE IF NOT EXISTS `Overall` (
+  `id` int(11) NOT NULL,
+  `Overall` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Results`
+--
+
+CREATE TABLE IF NOT EXISTS `Results` (
+  `VoteTime` text NOT NULL,
+  `Winner` text NOT NULL,
+  `Loser` text NOT NULL,
+  `IPAddress` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
