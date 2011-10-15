@@ -4,7 +4,9 @@
 
 NOTES:
 
-To add new candies, you'll have to add a new row to the candy_records table, as well as a new column within that table.  Then add the new candy to the Overall table as well.
+To add new comparison objects, you'll have to add a new row to the candy_records table, as well as a new column within that table.
+
+comp = comparison/compare
 
 -->
 
@@ -16,14 +18,17 @@ To add new candies, you'll have to add a new row to the candy_records table, as 
         <!-- 
 
         BODY { background-color: black; background-image: url('img/darkpumpkin.jpg'); color: #ffa500; background-repeat: repeat-x; font-family: Helvetica, Georgia; }
-        .records TH, .records TD { text-align: center; font-size: 8pt; }
         INPUT { font-size: 18pt; }
         A { color: #ffefc9;}
-        .candy_header { background: black; color: white; font-weight: bold; }
+        TABLE { border-color: #ffa500; }
+        
+        .records TH, .records TD { text-align: center; font-size: 8pt; }
+        .records TH { background: #333333;}
+        .compNames { background: #222222;}
+
         .heading { font-weight: bold; font-size: 16pt; color: #9acd32; }
         .heading2 { font-weight: bold; font-size: 22pt; color: #9acd32; }
-        .button_candy { background-color: #ffcc00; color: black; }
-        TABLE { border-color: #ffa500; }
+        .buttonComp { background-color: #ffcc00; color: black; }
         .datatables { padding: 15px;}
 
         // -->
@@ -39,11 +44,11 @@ require 'db.php';
 $dbh=mysql_connect ($userhost, $username, $userpass) or die ('Unable to connect to the database.');
 @mysql_select_db($dbname) or die( "Unable to select database.");
 
-// list of candy
+// list of things to compare
 $result = mysql_query("SELECT * FROM candy_records WHERE id=1 LIMIT 1");
 $row = mysql_fetch_array($result);
 
-// makes a $candies array out of the field names which contain all the candy names
+// makes a $compares array out of the field names which contain all the compared item names
 function mysql_field_array($query) {
     $field = mysql_num_fields($query);
     for ($i = 0; $i < $field; $i++) {
@@ -55,17 +60,17 @@ function mysql_field_array($query) {
     return $names;
 }
 
-$candies = mysql_field_array($result);
+$compares = mysql_field_array($result);
 
-// begin class CandyRecord
-class CandyRecord {
-    var $candy_name;
+// begin class CompareRecord
+class CompareRecord {
+    var $compName;
     var $wins;
     var $losses;
-    var $overall_wins;
-    var $overall_losses;
+    var $overallWins;
+    var $overallLosses;
 
-    // explodes the first candy's record, e.g. a record like 5-3 into two variables, discarding hyphen
+    // explodes the first compared item's record, e.g. a record like 5-3 into two variables, discarding hyphen
     function explode_record($record) {
         $records = explode("-",$record);
         if (($records[0] == '') || ($records[0] == '-')) { $records[0] = 0; }
@@ -76,7 +81,7 @@ class CandyRecord {
         return $records;
     }
 
-    // swaps first candy's record (e.g. 5-3) to (3-5) for the second candy to be evaluated
+    // swaps first item's record (e.g. 5-3) to (3-5) for the second item to be evaluated
     function swap_records($records) {
         $a = $records[0];
         $this->wins = $records[1];
@@ -86,8 +91,8 @@ class CandyRecord {
     }
 
     // fills overall win/loss records, sets to 0-0 if none existing found
-    function overall_record($candy_name) {
-        $result = mysql_query("SELECT Overall FROM candy_records WHERE Name='$candy_name' LIMIT 1");
+    function overall_record($compName) {
+        $result = mysql_query("SELECT Overall FROM candy_records WHERE Name='$compName' LIMIT 1");
         while ($row = mysql_fetch_assoc($result)) {
             $record_overall = $row['Overall'];
         }
@@ -95,33 +100,33 @@ class CandyRecord {
             $record_overall = '0-0';
         }
         $record_overall_exploded = explode("-",$record_overall);
-        $this->overall_wins = $record_overall_exploded[0];
-        $this->overall_losses = $record_overall_exploded[1];
+        $this->overallWins = $record_overall_exploded[0];
+        $this->overallLosses = $record_overall_exploded[1];
 
         return $record_overall_exploded;
     }
 
 }
-// end class CandyRecord
+// end class CompareRecord
 
-// tests if URL has &match=true and that both candy names have been POSTed
-if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['candy2']))) {
+// tests if URL has &match=true and that both items' names have been POSTed
+if (($_POST['match'] == 'true') && (isset($_POST['comp1'])) && (isset($_POST['comp2']))) {
 
-    $record1 = new CandyRecord;
-    $record2 = new CandyRecord;
+    $record1 = new CompareRecord;
+    $record2 = new CompareRecord;
 
     // escape strings for security
-    $record1->candy_name = mysql_real_escape_string($_POST['candy1']);
-    $record2->candy_name = mysql_real_escape_string($_POST['candy2']);
+    $record1->compName = mysql_real_escape_string($_POST['comp1']);
+    $record2->compName = mysql_real_escape_string($_POST['comp2']);
     
-    $record1->overall_record($record1->candy_name);
-    $record2->overall_record($record2->candy_name);
+    $record1->overall_record($record1->compName);
+    $record2->overall_record($record2->compName);
 
-    // pulls a record for a certain candy, e.g. pulling the "Twix" cell from the Skittles record
-    $result = mysql_query("SELECT `$record2->candy_name` FROM candy_records WHERE Name='$record1->candy_name' LIMIT 1");
+    // pulls a record for a certain item, e.g. pulling the "Twix" cell from the Skittles record
+    $result = mysql_query("SELECT `$record2->compName` FROM candy_records WHERE Name='$record1->compName' LIMIT 1");
 
     while ($row = mysql_fetch_assoc($result)) {
-        $vs_record = $row[$record2->candy_name];
+        $vs_record = $row[$record2->compName];
     }
     
     if (empty($vs_record)) {
@@ -131,59 +136,70 @@ if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['c
     $record1_exploded = $record1->explode_record($vs_record);
     $record2_exploded = $record2->swap_records($record1_exploded);
 
-    // do the candy names exist in the array?
-    if ((!in_array($record1->candy_name,$candies)) || (!in_array($record2->candy_name,$candies))) {
-        echo "Candy not found...  Nice try.";
+    // do the item names exist in the array?
+    if ((!in_array($record1->compName,$compares)) || (!in_array($record2->compName,$compares))) {
+        echo "<B>Item not found...  Nice try.</B>";
     }
     // if yes, then pick the winner and update all win-loss records
     else {
         if ($_POST['winner'] == 1) {
-            $winner = $record1->candy_name;
-            $loser = $record2->candy_name;
+            $winner = $record1->compName;
+            $loser = $record2->compName;
             $record1->wins++;
             $record2->losses++;
-            $record1->overall_wins++;
-            $record2->overall_losses++;
+            $record1->overallWins++;
+            $record2->overallLosses++;
+            updateRecords();
         }
         else if ($_POST['winner'] == 2) {
-            $winner = $record2->candy_name;
-            $loser = $record1->candy_name;
+            $winner = $record2->compName;
+            $loser = $record1->compName;
             $record2->wins++;
             $record1->losses++;
-            $record2->overall_wins++;
-            $record1->overall_losses++;
+            $record2->overallWins++;
+            $record1->overallLosses++;
+            updateRecords();
         }
-        $candy1_record_final = $record1->wins . '-' . $record1->losses;
-        $candy2_record_final = $record2->wins . '-' . $record2->losses;
-        $candy1_overall_record_final = $record1->overall_wins . '-' . $record1->overall_losses;
-        $candy2_overall_record_final = $record2->overall_wins . '-' . $record2->overall_losses;
-        
-        $query = "UPDATE candy_records SET `$record2->candy_name`='$candy1_record_final' WHERE Name='$record1->candy_name'";
-        mysql_query($query);
-        $query = "UPDATE candy_records SET `$record1->candy_name`='$candy2_record_final' WHERE Name='$record2->candy_name'";
-        mysql_query($query);
-        mysql_query("UPDATE Overall SET Overall=Overall+1 WHERE id=1");
-        $query = "UPDATE candy_records SET Overall='$candy1_overall_record_final' WHERE Name='$record1->candy_name'";
-        mysql_query($query);
-        $query = "UPDATE candy_records SET Overall='$candy2_overall_record_final' WHERE Name='$record2->candy_name'";
-        mysql_query($query);
-
-        $vote_time = time();
-        $ip_address = $_SERVER['REMOTE_ADDR'];
-        mysql_query("INSERT INTO Results (VoteTime, IPAddress, Winner, Loser) VALUES ('$vote_time', '$ip_address', '$winner', '$loser')");
+        else { // if someone tries to insert a value other than 1 or 2
+            echo "<B>Whether 1 or 2 won, you still lose, loser.  OUT OF BOUNDS.</B>";
+        }
+        // removed func
     }
 
 }
 
-// randomly pick two candies that are different
-$candy_random1 = rand(1,28);
+// randomly pick two compared items that are different
+// in the db, first id is 1, in rand() below, start w/ array[0]
+$compRandom1 = rand(0,27);
 
 $found = false;
 while ($found == false) {
-    $candy_random2 = rand(1,28);
-    if ($candy_random2 != $candy_random1) {
+    $compRandom2 = rand(0,27);
+    if ($compRandom2 != $compRandom1) {
         $found = true;
     }
+}
+
+// called in if..then statement where winners/losers assigned
+function updateRecords() {
+    $comp1RecordFinal = $record1->wins . '-' . $record1->losses;
+    $comp2RecordFinal = $record2->wins . '-' . $record2->losses;
+    $comp1OverallRecordFinal = $record1->overallWins . '-' . $record1->overallLosses;
+    $comp2OverallRecordFinal = $record2->overallWins . '-' . $record2->overallLosses;
+        
+    $query = "UPDATE candy_records SET `$record2->compName`='$comp1RecordFinal' WHERE Name='$record1->compName'";
+    mysql_query($query);
+    $query = "UPDATE candy_records SET `$record1->compName`='$comp2RecordFinal' WHERE Name='$record2->compName'";
+    mysql_query($query);
+    mysql_query("UPDATE Overall SET Overall=Overall+1 WHERE id=1");
+    $query = "UPDATE candy_records SET Overall='$comp1OverallRecordFinal' WHERE Name='$record1->compName'";
+    mysql_query($query);
+    $query = "UPDATE candy_records SET Overall='$comp2OverallRecordFinal' WHERE Name='$record2->compName'";
+    mysql_query($query);
+
+    $vote_time = time();
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+    mysql_query("INSERT INTO Results (VoteTime, IPAddress, Winner, Loser) VALUES ('$vote_time', '$ip_address', '$winner', '$loser')");
 }
 
 ?>
@@ -195,14 +211,14 @@ while ($found == false) {
 
 <!-- FACEOFF BEGIN -->
 <SPAN CLASS=heading2>Which Halloween candy do you prefer?</SPAN><BR>
-<TABLE border=0><TR><TD valign=middle align=center class=faceoff>
+<TABLE border=0><TR><TD valign=middle align=center class=faceOff>
 
-<FORM name=candy_form1 id=candy_form1 method=post action="./">
-<INPUT type=hidden name=candy1 value="<?php echo $candies[$candy_random1]; ?>">
-<INPUT type=hidden name=candy2 value="<?php echo $candies[$candy_random2]; ?>">
+<FORM name=compForm1 id=compForm1 method=post action="./">
+<INPUT type=hidden name=comp1 value="<?php echo $compares[$compRandom1]; ?>">
+<INPUT type=hidden name=comp2 value="<?php echo $compares[$compRandom2]; ?>">
 <INPUT type=hidden name=winner value="1">
 <INPUT type=hidden name=match value="true">
-<INPUT type=submit name=button_candy1 class=button_candy id=button_candy1 value="<?php echo $candies[$candy_random1]; ?>"></form>
+<INPUT type=submit name=buttonComp1 class=buttonComp id=buttonComp1 value="<?php echo $compares[$compRandom1]; ?>"></form>
 
 </TD>
 <TD valign=middle align=center>
@@ -212,12 +228,12 @@ vs.
 </TD>
 <TD valign=middle align=center>
 
-<form name=candy_form2 id=candy_form2 method=post action="./">
-<INPUT type=hidden name=candy1 value="<?php echo $candies[$candy_random1]; ?>">
-<INPUT type=hidden name=candy2 value="<?php echo $candies[$candy_random2]; ?>">
+<form name=compForm2 id=compForm2 method=post action="./">
+<INPUT type=hidden name=comp1 value="<?php echo $compares[$compRandom1]; ?>">
+<INPUT type=hidden name=comp2 value="<?php echo $compares[$compRandom2]; ?>">
 <INPUT type=hidden name=winner value="2">
 <INPUT type=hidden name=match value="true">
-<INPUT type=submit name=button_candy2 class=button_candy id=button_candy2 value="<?php echo $candies[$candy_random2]; ?>"></form>
+<INPUT type=submit name=buttonComp2 class=buttonComp id=buttonComp2 value="<?php echo $compares[$compRandom2]; ?>"></form>
 
 </TD>
 </tr></TABLE>
@@ -226,35 +242,35 @@ vs.
 <BR><BR>
 
 <?php
-if (($_POST['match'] == 'true') && (isset($_POST['candy1'])) && (isset($_POST['candy2']))) {
+if (($_POST['match'] == 'true') && (isset($_POST['comp1'])) && (isset($_POST['comp2']))) {
 ?>
 
 <SPAN CLASS="heading"><B>results from the last vote</B></SPAN><br>
 <B>you voted for:  <?php echo $winner; ?></B><BR>
-<?php echo '# of votes:  ' . $record1->candy_name . ' (' . $record1->wins . ') vs. ' . $record2->candy_name . ' (' . $record2->wins . ")\n"; ?>
+<?php echo '# of votes:  ' . $record1->compName . ' (' . $record1->wins . ') vs. ' . $record2->compName . ' (' . $record2->wins . ")\n"; ?>
 
 <BR><BR>
 
 <TABLE BORDER=0 CELLSPACING=10><TR>
 <TD VALIGN=top CLASS=datatables>
 
-<!-- shows last two candies' heads-up records -->
+<!-- shows last two compared items' heads-up records -->
 
-<SPAN CLASS="heading"><B>heads-up records</B></SPAN><BR>
+<SPAN CLASS="heading"><B>last pair's heads-up records</B></SPAN><BR>
 
 <!-- begin vs record table -->
-<table class="records" border=1 cellspacing=0 cellpadding=7 TITLE="view this as two candy columns with their heads-up records against all the other candies on the left">
+<table class="records" border=1 cellspacing=0 cellpadding=7 TITLE="view this as the last two paired competitors' columns with their heads-up records against all the other compared items on the left">
 <TR>
 <TH></TH>
 <?php
 
-echo "<TH>" . $record1->candy_name . "</TH><TH>" . $record2->candy_name . "</TH></TR>\n";
+echo "<TH>" . $record1->compName . "</TH><TH>" . $record2->compName . "</TH></TR>\n";
 
-$result_headsup1 = mysql_query("SELECT * FROM candy_records WHERE Name='$record1->candy_name' LIMIT 1");
-$result_headsup2 = mysql_query("SELECT * FROM candy_records WHERE Name='$record2->candy_name' LIMIT 1");
+$result_headsup1 = mysql_query("SELECT * FROM candy_records WHERE Name='$record1->compName' LIMIT 1");
+$result_headsup2 = mysql_query("SELECT * FROM candy_records WHERE Name='$record2->compName' LIMIT 1");
 while (($row_headsup1 = mysql_fetch_array($result_headsup1, MYSQL_ASSOC)) && ($row_headsup2 = mysql_fetch_array($result_headsup2, MYSQL_ASSOC))) {
-    foreach ($candies as $value) {
-        echo "<TR><TH>" . $value . "</TH><TD>" . $row_headsup1[$value] . "</TD><TD>" . $row_headsup2[$value] . "</TD></TR>";
+    foreach ($compares as $value) {
+        echo "<TR><TH class=compNames>" . $value . "</TH><TD>" . $row_headsup1[$value] . "</TD><TD>" . $row_headsup2[$value] . "</TD></TR>";
     } 
 }
 
@@ -281,7 +297,7 @@ while (($row_headsup1 = mysql_fetch_array($result_headsup1, MYSQL_ASSOC)) && ($r
 $result = mysql_query("SELECT Name, Overall FROM candy_records ORDER BY Name ASC");
 
 while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
-    echo "<TR><TD>" . $row3['Name'] . "</TD><TD>" . $row3['Overall'] . "</TD></TR>\n";
+    echo "<TR><TD class=compNames>" . $row3['Name'] . "</TD><TD>" . $row3['Overall'] . "</TD></TR>\n";
 }
 
 ?>
@@ -296,7 +312,7 @@ while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
 <SPAN CLASS="heading"><B>top candies</B></SPAN><BR>
 
 <table class="records" border=1 cellspacing=0 cellpadding=7> <!-- begin record table -->
-<TR><TH>Best</TH><TH>Record</TH><TH TITLE="wins divided by losses">Win %</TH></TR>
+<TR><TH>Best</TH><TH>Record</TH><TH>Win %</TH><TH TITLE="wins divided by losses">Win Ratio</TH></TR>
 
 <?php
 
@@ -315,7 +331,10 @@ $i = 0;
 $j = 0;
 
 while ($i < count($bestRecords)) {
+    // wins / losses
     $bestRecords[$i][4] = $bestRecords[$i][0] / $bestRecords[$i][1];
+    // wins / (wins + losses)
+    $bestRecords[$i][5] = $bestRecords[$i][0] / ($bestRecords[$i][0] + $bestRecords[$i][1]);
     $i++;
 }
 
@@ -326,17 +345,9 @@ function custom_sort($a, $b) {
 
 $i = 0;
 while ($i < count($bestRecords)) {
-    echo "<TR><TD>" . $bestRecords[$i][2] . "</TD><TD>" . $bestRecords[$i][3] . "</TD><TD>" . round($bestRecords[$i][4],2) . "</TD></TR>\n";
+    echo "<TR><TD class=compNames>" . $bestRecords[$i][2] . "</TD><TD>" . $bestRecords[$i][3] . "</TD><TD>" . round($bestRecords[$i][5],2) . "</TD><TD>" . round($bestRecords[$i][4],2) . "</TD></TR>\n";
     $i++;
 }
-
-/*
-
-while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
-    echo "<TR><TD>" . $row3['Name'] . "</TD><TD>" . $row3['Overall'] . "</TD></TR>\n";
-}
-
-*/
 
 mysql_close();
 
