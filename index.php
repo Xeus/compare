@@ -236,7 +236,7 @@ vs.
 <INPUT type=submit name=buttonComp2 class=buttonComp id=buttonComp2 value="<?php echo $compares[$compRandom2]; ?>"></form>
 
 </TD>
-</tr></TABLE>
+</TR></TABLE>
 <!-- FACEOFF END -->
 
 <BR><BR>
@@ -260,11 +260,9 @@ if (($_POST['match'] == 'true') && (isset($_POST['comp1'])) && (isset($_POST['co
 
 <!-- begin vs record table -->
 <table class="records" border=1 cellspacing=0 cellpadding=7 TITLE="view this as the last two paired competitors' columns with their heads-up records against all the other compared items on the left">
-<TR>
-<TH></TH>
 <?php
 
-echo "<TH>" . $record1->compName . "</TH><TH>" . $record2->compName . "</TH></TR>\n";
+echo "<TR><TH STYLE=\"background-color: '';\"></TH><TH>" . $record1->compName . "</TH><TH>" . $record2->compName . "</TH></TR>\n";
 
 $result_headsup1 = mysql_query("SELECT * FROM candy_records WHERE Name='$record1->compName' LIMIT 1");
 $result_headsup2 = mysql_query("SELECT * FROM candy_records WHERE Name='$record2->compName' LIMIT 1");
@@ -281,6 +279,10 @@ while (($row_headsup1 = mysql_fetch_array($result_headsup1, MYSQL_ASSOC)) && ($r
 
 <?php
 }
+else {
+    echo "<TABLE BORDER=0 CELLSPACING=10><TR><TD>";
+}
+
 ?>
 
 </TD><TD VALIGN=top CLASS=datatables>
