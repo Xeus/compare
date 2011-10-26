@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 
 <!--
 
@@ -14,17 +14,18 @@ comp = comparison/compare
 
 <HEAD>
     <TITLE>What's the Best Halloween Candy?</TITLE>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <STYLE type="text/css">
         <!-- 
 
         BODY { background-color: black; background-image: url('img/darkpumpkin.jpg'); color: #ffa500; background-repeat: repeat-x; font-family: Helvetica, Georgia; }
         INPUT { font-size: 18pt; }
         A { color: #ffefc9;}
-        TABLE { border-color: #ffa500; }
         
-        .records TH, .records TD { text-align: center; font-size: 8pt; }
-        .records TH { background: #333333;}
-        .compNames { background: #222222;}
+        .records { border: 1px solid #FFA500; border-collapse: collapse; }
+        .records TH, .records TD { text-align: center; font-size: 8pt; border: 1px solid #FFA500; padding: 7px; border-spacing: 10px; }
+        .records TH { background: #333333; }
+        .compNames { background: #222222; }
 
         .heading { font-weight: bold; font-size: 16pt; color: #9acd32; }
         .heading2 { font-weight: bold; font-size: 22pt; color: #9acd32; }
@@ -206,60 +207,66 @@ function updateRecords() {
 
 <!-- Yeah I know, I'm using tables... -->
 
-<BR><BR><BR>
-<CENTER>
+<DIV><BR><BR><BR></DIV>
+<DIV STYLE="text-align: center;">
 
 <!-- FACEOFF BEGIN -->
-<SPAN CLASS=heading2>Which Halloween candy do you prefer?</SPAN><BR>
-<TABLE border=0><TR><TD valign=middle align=center class=faceOff>
+<DIV CLASS=heading2>Which Halloween candy do you prefer?</DIV><BR>
+<TABLE STYLE="border-width: 0px; margin-left: auto; margin-right: auto;"><TR><TD STYLE="vertical-align: middle; text-align: center;" class=faceOff>
 
 <FORM name=compForm1 id=compForm1 method=post action="./">
+<DIV>
 <INPUT type=hidden name=comp1 value="<?php echo $compares[$compRandom1]; ?>">
 <INPUT type=hidden name=comp2 value="<?php echo $compares[$compRandom2]; ?>">
 <INPUT type=hidden name=winner value="1">
 <INPUT type=hidden name=match value="true">
-<INPUT type=submit name=buttonComp1 class=buttonComp id=buttonComp1 value="<?php echo $compares[$compRandom1]; ?>"></form>
+<INPUT type=submit name=buttonComp1 class=buttonComp id=buttonComp1 value="<?php echo $compares[$compRandom1]; ?>">
+</DIV>
+</form>
 
 </TD>
-<TD valign=middle align=center>
+<TD STYLE="vertical-align: middle; text-align: center;">
 
 vs.
 
 </TD>
-<TD valign=middle align=center>
+<TD STYLE="vertical-align: middle; text-align: center;">
 
 <form name=compForm2 id=compForm2 method=post action="./">
+<DIV>
 <INPUT type=hidden name=comp1 value="<?php echo $compares[$compRandom1]; ?>">
 <INPUT type=hidden name=comp2 value="<?php echo $compares[$compRandom2]; ?>">
 <INPUT type=hidden name=winner value="2">
 <INPUT type=hidden name=match value="true">
-<INPUT type=submit name=buttonComp2 class=buttonComp id=buttonComp2 value="<?php echo $compares[$compRandom2]; ?>"></form>
+<INPUT type=submit name=buttonComp2 class=buttonComp id=buttonComp2 value="<?php echo $compares[$compRandom2]; ?>">
+</DIV>
+</form>
 
 </TD>
 </TR></TABLE>
 <!-- FACEOFF END -->
 
-<BR><BR>
+<DIV><BR></DIV>
 
 <?php
 if (($_POST['match'] == 'true') && (isset($_POST['comp1'])) && (isset($_POST['comp2']))) {
 ?>
 
-<SPAN CLASS="heading"><B>results from the last vote</B></SPAN><br>
+<SPAN CLASS="heading"><B>results from the last vote</B></SPAN><BR>
 <B>you voted for:  <?php echo $winner; ?></B><BR>
 <?php echo '# of votes:  ' . $record1->compName . ' (' . $record1->wins . ') vs. ' . $record2->compName . ' (' . $record2->wins . ")\n"; ?>
 
-<BR><BR>
+<DIV><BR></DIV>
 
-<TABLE BORDER=0 CELLSPACING=10><TR>
-<TD VALIGN=top CLASS=datatables>
+<TABLE STYLE="margin-left: auto; margin-right: auto;"><TR>
+<TD STYLE="vertical-align: top;" CLASS=datatables>
 
 <!-- shows last two compared items' heads-up records -->
 
 <SPAN CLASS="heading"><B>last pair's heads-up records</B></SPAN><BR>
 
 <!-- begin vs record table -->
-<table class="records" border=1 cellspacing=0 cellpadding=7 TITLE="view this as the last two paired competitors' columns with their heads-up records against all the other compared items on the left">
+<table class="records" TITLE="view this as the last two paired competitors' columns with their heads-up records against all the other compared items on the left">
 <?php
 
 echo "<TR><TH STYLE=\"background-color: '';\"></TH><TH>" . $record1->compName . "</TH><TH>" . $record2->compName . "</TH></TR>\n";
@@ -280,18 +287,18 @@ while (($row_headsup1 = mysql_fetch_array($result_headsup1, MYSQL_ASSOC)) && ($r
 <?php
 }
 else {
-    echo "<TABLE BORDER=0 CELLSPACING=10><TR><TD>";
+    echo "<TABLE STYLE=\"margin-left: auto; margin-right: auto;\"><TR><TD>";
 }
 
 ?>
 
-</TD><TD VALIGN=top CLASS=datatables>
+</TD><TD STYLE="vertical-align: top;" CLASS=datatables>
 
 <!-- prints out overall record chart, alphabetically -->
 
 <SPAN CLASS="heading"><B>overall records</B></SPAN><BR>
 
-<table class="records" border=1 cellspacing=0 cellpadding=7> <!-- begin record table -->
+<table class="records"> <!-- begin record table -->
 <TR><TH>Overall</TH><TH>Record</TH></TR>
 
 <?php
@@ -307,13 +314,13 @@ while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
 </table>
 <!-- end record table -->
 
-</TD><TD VALIGN=top CLASS=datatables>
+</TD><TD STYLE="vertical-align: top;" CLASS=datatables>
 
 <!-- check win/loss percentages, sort, display -->
 
 <SPAN CLASS="heading"><B>top candies</B></SPAN><BR>
 
-<table class="records" border=1 cellspacing=0 cellpadding=7> <!-- begin record table -->
+<table class="records"> <!-- begin record table -->
 <TR><TH>Best</TH><TH>Record</TH><TH>Win %</TH><TH TITLE="wins divided by losses">Win Ratio</TH></TR>
 
 <?php
@@ -361,12 +368,14 @@ mysql_close();
 </TD>
 </TR></TABLE>
 
-<BR><BR>
+<DIV><BR><BR></DIV>
 
-<center><font size=1>
+<DIV STYLE="text-align: center; font-size: x-small;">
 created by <a href="http://benturner.com/">ben turner</A> for fun. <a href="http://benturner.com/contact_me.php">contact me</a> with feedback.<br>
 <a href="https://github.com/Xeus/compare">check out the code</a> on github.
-</font></center>
+</DIV>
+
+</DIV>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 
