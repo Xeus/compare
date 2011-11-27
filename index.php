@@ -4,7 +4,7 @@
 
 NOTES:
 
-To add new comparison objects, you'll have to add a new row to the candy_records table, as well as a new column within that table.
+To add new comparison objects, you'll have to add a new row to the compare_records table, as well as a new column within that table.
 
 comp = comparison/compare
 
@@ -14,7 +14,7 @@ comp = comparison/compare
 
 <HEAD>
     <TITLE>What's the Best Halloween Candy?</TITLE>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <META http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <STYLE type="text/css">
         <!-- 
 
@@ -46,7 +46,7 @@ $dbh=mysql_connect ($userhost, $username, $userpass) or die ('Unable to connect 
 @mysql_select_db($dbname) or die( "Unable to select database.");
 
 // list of things to compare
-$result = mysql_query("SELECT * FROM candy_records WHERE id=1 LIMIT 1");
+$result = mysql_query("SELECT * FROM compare_records WHERE id=1 LIMIT 1");
 $row = mysql_fetch_array($result);
 
 // makes a $compares array out of the field names which contain all the compared item names
@@ -93,7 +93,7 @@ class CompareRecord {
 
     // fills overall win/loss records, sets to 0-0 if none existing found
     function overall_record($compName) {
-        $result = mysql_query("SELECT Overall FROM candy_records WHERE Name='$compName' LIMIT 1");
+        $result = mysql_query("SELECT Overall FROM compare_records WHERE Name='$compName' LIMIT 1");
         while ($row = mysql_fetch_assoc($result)) {
             $record_overall = $row['Overall'];
         }
@@ -124,7 +124,7 @@ if (($_POST['match'] == 'true') && (isset($_POST['comp1'])) && (isset($_POST['co
     $record2->overall_record($record2->compName);
 
     // pulls a record for a certain item, e.g. pulling the "Twix" cell from the Skittles record
-    $result = mysql_query("SELECT `$record2->compName` FROM candy_records WHERE Name='$record1->compName' LIMIT 1");
+    $result = mysql_query("SELECT `$record2->compName` FROM compare_records WHERE Name='$record1->compName' LIMIT 1");
 
     while ($row = mysql_fetch_assoc($result)) {
         $vs_record = $row[$record2->compName];
@@ -188,14 +188,14 @@ function updateRecords() {
     $comp1OverallRecordFinal = $record1->overallWins . '-' . $record1->overallLosses;
     $comp2OverallRecordFinal = $record2->overallWins . '-' . $record2->overallLosses;
         
-    $query = "UPDATE candy_records SET `$record2->compName`='$comp1RecordFinal' WHERE Name='$record1->compName'";
+    $query = "UPDATE compare_records SET `$record2->compName`='$comp1RecordFinal' WHERE Name='$record1->compName'";
     mysql_query($query);
-    $query = "UPDATE candy_records SET `$record1->compName`='$comp2RecordFinal' WHERE Name='$record2->compName'";
+    $query = "UPDATE compare_records SET `$record1->compName`='$comp2RecordFinal' WHERE Name='$record2->compName'";
     mysql_query($query);
     mysql_query("UPDATE Overall SET Overall=Overall+1 WHERE id=1");
-    $query = "UPDATE candy_records SET Overall='$comp1OverallRecordFinal' WHERE Name='$record1->compName'";
+    $query = "UPDATE compare_records SET Overall='$comp1OverallRecordFinal' WHERE Name='$record1->compName'";
     mysql_query($query);
-    $query = "UPDATE candy_records SET Overall='$comp2OverallRecordFinal' WHERE Name='$record2->compName'";
+    $query = "UPDATE compare_records SET Overall='$comp2OverallRecordFinal' WHERE Name='$record2->compName'";
     mysql_query($query);
 
     $vote_time = time();
@@ -271,8 +271,8 @@ if (($_POST['match'] == 'true') && (isset($_POST['comp1'])) && (isset($_POST['co
 
 echo "<TR><TH STYLE=\"background-color: '';\"></TH><TH>" . $record1->compName . "</TH><TH>" . $record2->compName . "</TH></TR>\n";
 
-$result_headsup1 = mysql_query("SELECT * FROM candy_records WHERE Name='$record1->compName' LIMIT 1");
-$result_headsup2 = mysql_query("SELECT * FROM candy_records WHERE Name='$record2->compName' LIMIT 1");
+$result_headsup1 = mysql_query("SELECT * FROM compare_records WHERE Name='$record1->compName' LIMIT 1");
+$result_headsup2 = mysql_query("SELECT * FROM compare_records WHERE Name='$record2->compName' LIMIT 1");
 while (($row_headsup1 = mysql_fetch_array($result_headsup1, MYSQL_ASSOC)) && ($row_headsup2 = mysql_fetch_array($result_headsup2, MYSQL_ASSOC))) {
     foreach ($compares as $value) {
         echo "<TR><TH class=compNames>" . $value . "</TH><TD>" . $row_headsup1[$value] . "</TD><TD>" . $row_headsup2[$value] . "</TD></TR>";
@@ -303,7 +303,7 @@ else {
 
 <?php
 
-$result = mysql_query("SELECT Name, Overall FROM candy_records ORDER BY Name ASC");
+$result = mysql_query("SELECT Name, Overall FROM compare_records ORDER BY Name ASC");
 
 while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
     echo "<TR><TD class=compNames>" . $row3['Name'] . "</TD><TD>" . $row3['Overall'] . "</TD></TR>\n";
@@ -325,7 +325,7 @@ while ($row3 = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
 <?php
 
-$result = mysql_query("SELECT Name, Overall FROM candy_records ORDER BY Name ASC");
+$result = mysql_query("SELECT Name, Overall FROM compare_records ORDER BY Name ASC");
 
 $i = 0;
 
